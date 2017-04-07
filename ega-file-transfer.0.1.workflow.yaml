@@ -7,7 +7,7 @@ workflow:
   source_code: https://github.com/icgc-dcc/ega-file-transfer
   docker_image: https://quay.io/repository/icgc-dcc/ega-file-transfer
 
-main:
+descriptor:
   inputs:
     - name: bundle_id
       type: string
@@ -27,20 +27,16 @@ main:
           object_id:
             type: string
 
-  run: null  # when run is null, run JT scheduler
-
   outputs: null
 
   completion_depends_on:
     - upload.completed
 
-# A workflow is made up with one main job and zeor or more sub-jobs
-# A sub-job can not be named as 'main'
-# Each sub-job can have its own docker imagine if desirable
-jobs:  # jobs consists of individual sub-jobs
+# A workflow is made up with one or more tasks
+# Each task can have its own docker imagine if desirable
+tasks:
   - name: prepare_metadata_xml
-    depends_on:
-      - main.queued
+    depends_on: null
     run: bin/extract_header.py
     inputs:
       - ega_files:
@@ -59,8 +55,7 @@ jobs:  # jobs consists of individual sub-jobs
           type: string
 
   - name: download
-    depends_on:
-      - main.queued
+    depends_on: null
     run: bin/download.py
     inputs:
       - ega_files:
