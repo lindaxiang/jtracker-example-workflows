@@ -38,6 +38,7 @@ tasks:
   - name: prepare_metadata_xml
     depends_on: null
     run: bin/extract_header.py
+    constraint: null
     inputs:
       - ega_files:
           type: array
@@ -57,6 +58,7 @@ tasks:
   - name: download
     depends_on: null
     run: bin/download.py
+    constraint: null
     inputs:
       - ega_files:
           type: array
@@ -71,6 +73,7 @@ tasks:
   - name: md5sum_check
     depends_on:
       - download.completed
+    constraint: same_host
     run: bin/md5sum_check.py
     inputs:
       - ega_files:
@@ -89,6 +92,7 @@ tasks:
     depends_on:
       - md5sum_check.completed
       - prepare_metadata_xml.completed
+    constraint: same_host
     run: bin/upload.py
     inputs:
       - ega_files:
