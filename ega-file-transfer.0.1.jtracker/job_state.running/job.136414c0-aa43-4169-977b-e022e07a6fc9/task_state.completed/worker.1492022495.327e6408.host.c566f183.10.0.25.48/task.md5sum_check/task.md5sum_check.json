@@ -1,1 +1,12 @@
-{}
+{
+    "file_id": "dfd",
+    "current_worker": "dfdsa",
+    "runs": [
+        {
+            "worker_id": "",
+            "start": 3242,
+            "end": 34242,
+            "workdir": "dfasf/afds;fla/"
+        }
+    ]
+}
