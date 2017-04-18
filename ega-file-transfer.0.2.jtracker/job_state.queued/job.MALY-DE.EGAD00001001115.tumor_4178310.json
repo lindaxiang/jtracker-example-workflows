@@ -5,11 +5,12 @@
    "icgc_sample_id": "SA2322",
    "submitter_donor_id": null,
    "submitter_specimen_id": "tumor_4178310",
-   "submitter": "MALY-DE",  // it could be "ICGC-DCC", in such case, bundle_id should be analysis/run alias
-   "bundle_type": "analysis",  // enum: experiment, analysis
+   "submitter": "MALY-DE",
+   "bundle_type": "analysis",
    "bundle_id": "EGAZxxxxxxx",
    "library_strategy": "WGS",
-   "metadata_xml": "https://github.com/icgc-dcc/ega-file-transfer/ega_xml/MALY-DE/EGAZxxxxxx",
+   "metadata_repo_url": "https://github.com/icgc-dcc/ega-file-transfer",
+   "metadata_path": "ega_xml",
    "files": [
        {
            "file_md5sum": "c9eac57c275d00cb6b3b19bb6a6c33c2",
