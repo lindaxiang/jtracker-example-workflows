@@ -57,13 +57,13 @@ tasks:
   upload:
     command: upload.py
     inputs:
+      project_code:
+        type: string
       ega_files:
         type: array
         items:
           type: object
           properties:
-            project_code:
-              type: string
             file_name:
               type: string
             file_md5sum:
@@ -87,7 +87,10 @@ workflow:
   runtime:
     docker: "quay.io/junjun_zhang/ega_file_transfer"
 
-  execution_constrait: same_host
+  execution:
+    worker: shared_fs
+    memory: 2g
+    cpu: 1
 
   input:
     project_code:
@@ -155,6 +158,7 @@ workflow:
       - download@completed
     upload:
       input:
+        bundle_id: bundle_id
         ega_files: files
         xml_file_name: prepare_metadata_xml.xml_file_name
         xml_file_size: prepare_metadata_xml.xml_file_size
