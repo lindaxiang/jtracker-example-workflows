@@ -1,36 +1,35 @@
 jtracker_git_repo:
-  url: https://github.com/icgc-dcc/jtracker_example_workflow
-
-workflow:
-  name:  ega-file-transfer
-  version: "0.2"
-  source_code: https://github.com/icgc-dcc/ega-file-transfer
-  docker_image: https://quay.io/repository/icgc-dcc/ega-file-transfer
+  url: https://github.com/junjun-zhang/jtracker_example_workflow
 
 
-descriptor:
-  inputs:
-    - bundle_id:
+# A workflow is made up with one or more tasks
+# Each task can have its own docker imagine if desirablebbvv
+tasks:
+  prepare_metadata_xml:
+    command: prepare_metadata_xml.py
+    input:
+      project_code:
         type: string
-    - project_code:
+      dataset_id:
         type: string
-    - submitter_sample_id:
+      submitter_sample_id:
         type: string
-    - icgc_sample_id:
+      metadata_git_repo:
         type: string
-    - submitter_donor_id:
+      metadata_path:
         type: string
-    - submitter_specimen_id:
+    output:
+      xml_file_name:
         type: string
-    - submitter:
+      xml_file_size:
+        type: integer
+      xml_file_md5sum:
         type: string
-    - bundle_type:
-        type: string
-    - library_strategy:
-        type: string
-    - metadata_xml_location:
-        type: string
-    - files:
+
+  download:
+    command: download.py
+    input:
+      files:
         type: array
         items:
           type: object
@@ -39,91 +38,129 @@ descriptor:
               type: string
             file_name:
               type: string
+
+  md5sum_check:
+    command: md5sum_check.py
+    inputs:
+      files:
+        type: array
+        items:
+          type: object
+          properties:
+            file_name:
+              type: string
             file_size:
               type: integer
             file_md5sum:
               type: string
-            object_id:
-              type: string
 
-  outputs: null
-
-  completion_depends_on:
-    - upload.completed
-
-# A workflow is made up with one or more tasks
-# Each task can have its own docker imagine if desirable
-tasks:
-  - name: prepare_metadata_xml
-    depends_on: null
-    run: bin/extract_header.py
-    constraint: null
+  upload:
+    command: upload.py
     inputs:
-      - ega_files:
-          type: array
-          items:
-            type: object
-            properties:
-              file_name:
-                type: string
-              file_size:
-                type: integer
-              file_md5sum:
-                type: string
-    outputs:
-      - metadata_xml_file:
-          type: string
-
-  - name: download
-    depends_on: null
-    run: bin/download.py
-    constraint: null
-    inputs:
-      - ega_files:
-          type: array
-          items:
-            type: object
-            properties:
-              ega_file_id:
+      ega_files:
+        type: array
+        items:
+          type: object
+          properties:
+            project_code:
               type: string
             file_name:
               type: string
+            file_md5sum:
+              type: string
+            object_id:
+              type: string
+      xml_file_name:
+        type: string
+      xml_file_size:
+        type: integer
+      xml_file_md5sum:
+        type: string
 
-  - name: md5sum_check
-    depends_on:
-      - download.completed
-    constraint: same_host
-    run: bin/md5sum_check.py
-    inputs:
-      - ega_files:
-          type: array
-          items:
-            type: object
-            properties:
-              file_name:
-                type: string
-              file_size:
-                type: integer
-              file_md5sum:
-                type: string
 
-  - name: upload
-    depends_on:
-      - md5sum_check.completed
-      - prepare_metadata_xml.completed
-    constraint: same_host
-    run: bin/upload.py
-    inputs:
-      - ega_files:
-          type: array
-          items:
-            type: object
-            properties:
-              file_name:
-                type: string
-              object_id:
-                type: string
-      - metadata_xml_file:
-          type: string
+workflow:
+  name:  ega-file-transfer
+  version: "0.2"
+  source_code: https://github.com/icgc-dcc/ega-file-transfer
+  docker_image: https://quay.io/repository/icgc-dcc/ega-file-transfer
+
+  runtime:
+    docker: "quay.io/junjun_zhang/ega_file_transfer"
+
+  execution_constrait: same_host
+
+  input:
+    project_code:
+      type: string
+    dataset_id:
+      type: string
+    submitter_sample_id:
+      type: string
+    icgc_sample_id:
+      type: string
+    submitter_donor_id:
+      type: string
+    submitter_specimen_id:
+      type: string
+    submitter:
+      type: string
+    bundle_type: # experiement or analysis
+      type: string
+    bundle_id:
+      type: string
+    library_strategy:
+      type: string
+    metadata_git_repo:
+      type: string
+    metadata_path:
+      type: string
+    files:
+      type: array
+      items:
+        type: object
+        properties:
+          ega_file_id:
+            type: string
+          file_name:
+            type: string
+          file_size:
+            type: integer
+          file_md5sum:
+            type: string
+          object_id:
+            type: string
+
+  output: null  # we may not need this
+
+  completion_depends_on:  # do we need this? is it all calls succeeded then it's completed
+    - upload@completed
+
+  calls:
+    prepare_metadata_xml:
+      input:
+        project_code: project_code
+        dataset_id: dataset_id
+        submitter_sample_id: submitter_sample_id
+        metadata_git_repo: metadata_git_repo
+        metadata_path: metadata_path
+      depends_on: null
+    download:
+      input:
+        files: files
+      depends_on: null
+    md5sum_check:
+      input:
+        files: files
+      depends_on:
+      - download@completed
+    upload:
+      input:
+        ega_files: files
+        xml_file_name: prepare_metadata_xml.xml_file_name
+        xml_file_size: prepare_metadata_xml.xml_file_size
+        xml_file_md5sum: prepare_metadata_xml.xml_file_md5sum
+      depends_on:
+      - download@completed
+      - md5sum_check@completed
 
 
