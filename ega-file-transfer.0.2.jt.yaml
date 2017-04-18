@@ -133,7 +133,7 @@ workflow:
   output: null  # we may not need this
 
   completion_depends_on:  # do we need this? is it all calls succeeded then it's completed
-    - upload@completed
+  - upload@completed
 
   calls:
     prepare_metadata_xml:
@@ -160,7 +160,7 @@ workflow:
         xml_file_size: prepare_metadata_xml.xml_file_size
         xml_file_md5sum: prepare_metadata_xml.xml_file_md5sum
       depends_on:
-      - download@completed
+      - prepare_metadata_xml@completed
       - md5sum_check@completed
 
 
