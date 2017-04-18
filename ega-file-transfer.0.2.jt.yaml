@@ -6,7 +6,7 @@ jtracker_git_repo:
 # Each task can have its own docker imagine if desirablebbvv
 tasks:
   prepare_metadata_xml:
-    command: prepare_metadata_xml.py
+    command: echo prepare_metadata_xml.py
     input:
       project_code:
         type: string
@@ -27,7 +27,7 @@ tasks:
         type: string
 
   download:
-    command: download.py
+    command: echo download.py
     input:
       files:
         type: array
@@ -40,8 +40,8 @@ tasks:
               type: string
 
   md5sum_check:
-    command: md5sum_check.py
-    inputs:
+    command: echo md5sum_check.py
+    input:
       files:
         type: array
         items:
@@ -55,8 +55,8 @@ tasks:
               type: string
 
   upload:
-    command: upload.py
-    inputs:
+    command: echo upload.py
+    input:
       project_code:
         type: string
       ega_files:
@@ -88,7 +88,7 @@ workflow:
     docker: "quay.io/junjun_zhang/ega_file_transfer"
 
   execution:
-    worker: shared_fs
+    constrait: same_host  # other values: 'shared_fs', 'same_worker'
     memory: 2g
     cpu: 1
 
@@ -133,7 +133,7 @@ workflow:
           object_id:
             type: string
 
-  output: null  # we may not need this
+  output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 
   completion_depends_on:  # do we need this? is it all calls succeeded then it's completed
   - upload@completed
