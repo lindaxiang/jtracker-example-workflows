@@ -24,4 +24,3 @@ output_json = {
 
 save_output_json(output_json)
 
-exit(1) # let's make this fail
