@@ -14,3 +14,4 @@ with open('task_json.json', 'w') as f:
 with open('output.json', 'w') as f:
   f.write(json.dumps({"task": "md5sum_check"}))
 
+exit(1) # let's make this fail
