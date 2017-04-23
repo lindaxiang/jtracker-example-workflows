@@ -204,8 +204,6 @@ workflow:
     parallel_align:
       parallel_call:
         with_items: bam in unalignedBams
-      input:
-        bam: bam
       calls:
         get_basename:
           input:
