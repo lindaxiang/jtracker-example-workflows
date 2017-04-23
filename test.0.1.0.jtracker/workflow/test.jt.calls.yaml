@@ -36,16 +36,16 @@ md5sum_check:
   - completed@download@same_host
 upload:
   input:
-    ega_files:
-      file_name: file_name@download
-      file_md5sum: file_md5sum@download
-      ega_file_id: ega_file_id@download
-      file_size: file_size@download
     xml_file_md5sum: xml_file_md5sum@prepare_metadata_xml
     xml_file_name: xml_file_name@prepare_metadata_xml
     xml_file: xml_file@prepare_metadata_xml
-    bundle_id: bundle_id
+    ega_files.file: file@download
+    ega_files.file_md5sum: file_md5sum@download
     xml_file_size: xml_file_size@prepare_metadata_xml
+    ega_files.file_size: file_size@download
+    ega_files.file_name: file_name@download
+    bundle_id: bundle_id
+    ega_files.ega_file_id: ega_file_id@download
   task: upload
   depends_on:
   - completed@prepare_metadata_xml
