@@ -94,11 +94,11 @@ workflow:
       task: upload
       input:
         bundle_id: bundle_id
-        ega_files:
-          ega_file_id: ega_file_id@download
-          file_name: file_name@download
-          file_size: file_size@download
-          file_md5sum: file_md5sum@download
+        ega_files.file: file@download
+        ega_files.ega_file_id: ega_file_id@download
+        ega_files.file_name: file_name@download
+        ega_files.file_size: file_size@download
+        ega_files.file_md5sum: file_md5sum@download
         xml_file: xml_file@prepare_metadata_xml
         xml_file_name: xml_file_name@prepare_metadata_xml
         xml_file_size: xml_file_size@prepare_metadata_xml
