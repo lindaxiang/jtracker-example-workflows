@@ -1,1 +1,0 @@
-{"input": {"file_name": "{ega_file.file_name}", "ega_file_id": "{ega_file.ega_file_id}"}, "runtime": {"docker": "quay.io/junjun_zhang/ega-file-transfer-to-collab"}, "command": "download.py"}
