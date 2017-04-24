@@ -1,1 +1,0 @@
-{"input": {"metadata_git_repo": null, "submitter_sample_id": "tumor_4178310", "dataset_id": null, "project_code": "MALY-DE", "metadata_path": "ega_xml"}, "runtime": {"docker": "quay.io/junjun_zhang/ega-file-transfer-to-collab"}, "command": "prepare_metadata_xml.py", "output": [{"task": "prepare_metadata_xml", "worker_id": "worker.1493063562.7bbc44dc.host.c76b7522.10.0.0.145"}]}
