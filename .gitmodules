@@ -1,3 +1,4 @@
 [submodule "ega-file-transfer-to-collab.0.3.0.jtracker/workflow"]
 	path = ega-file-transfer-to-collab.0.3.0.jtracker/workflow
-	url = git@github.com:icgc-dcc/ega-file-transfer-to-collab.git
+        url = git@github.com:lindaxiang/ega-file-transfer-to-collab.git
+	#url = git@github.com:icgc-dcc/ega-file-transfer-to-collab.git
