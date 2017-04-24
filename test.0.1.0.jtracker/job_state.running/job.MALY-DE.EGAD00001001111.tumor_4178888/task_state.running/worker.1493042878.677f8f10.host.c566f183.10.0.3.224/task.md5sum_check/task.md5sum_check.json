@@ -1,1 +1,0 @@
-{"input": {"file_md5sum": "{ega_file.file_md5sum}", "file": "{file@download}", "file_size": "{ega_file.file_size}"}, "runtime": {"docker": "quay.io/junjun_zhang/ega-file-transfer-to-collab"}, "command": "md5sum_check.py"}
