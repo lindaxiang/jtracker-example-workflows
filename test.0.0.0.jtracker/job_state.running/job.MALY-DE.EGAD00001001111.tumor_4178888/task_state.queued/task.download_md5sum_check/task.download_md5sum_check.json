@@ -1,0 +1,1 @@
+{"task": "md5sum_check", "depends_on": ["completed@download"], "command": "md5sum_check.py", "call": "download_md5sum_check", "input": {"files": "{{files@download}}"}, "runtime": {"docker": "quay.io/junjun_zhang/ega-file-transfer-to-collab"}}
