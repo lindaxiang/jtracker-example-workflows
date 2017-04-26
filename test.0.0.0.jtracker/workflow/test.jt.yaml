@@ -61,6 +61,7 @@ workflow:
 
   calls:
     prepare_metadata_xml:
+      task: prepare_metadata_xml
       input:
         project_code: project_code
         dataset_id: dataset_id
@@ -72,21 +73,23 @@ workflow:
       input:
         files: files
       depends_on: null
-    md5sum_check:
+    download_md5sum_check:
+      task: md5sum_check
       input:
-        files: files
+        files: files@download
       depends_on:
-      - download@completed
-    upload:
+      - completed@download
+    upload_all:
+      task: upload
       input:
         bundle_id: bundle_id
         ega_files: files
-        xml_file_name: prepare_metadata_xml.xml_file_name
-        xml_file_size: prepare_metadata_xml.xml_file_size
-        xml_file_md5sum: prepare_metadata_xml.xml_file_md5sum
+        xml_file_name: xml_file_name@prepare_metadata_xml
+        xml_file_size: xml_file_size@prepare_metadata_xml
+        xml_file_md5sum: xml_file_md5sum@prepare_metadata_xml
       depends_on:
-      - prepare_metadata_xml@completed
-      - md5sum_check@completed
+      - completed@prepare_metadata_xml
+      - completed@download_md5sum_check
 
 
 # A workflow is made up with one or more tasks

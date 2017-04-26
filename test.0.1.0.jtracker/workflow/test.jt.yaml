@@ -61,6 +61,7 @@ workflow:
 
   calls:
     prepare_metadata_xml:
+      task: prepare_metadata_xml
       input:
         project_code: project_code
         dataset_id: dataset_id
@@ -82,7 +83,8 @@ workflow:
             ega_file_id: ega_file.ega_file_id
             file_name: ega_file.file_name
           depends_on: null
-        md5sum_check:
+        md5sum_check_download:
+          task: md5sum_check
           input:
             file: file@download
             file_size: ega_file.file_size
@@ -96,6 +98,7 @@ workflow:
         bundle_id: bundle_id
         ega_files.file: file@download
         ega_files.ega_file_id: ega_file_id@download
+        ega_files.object_id: ega_file_id@download
         ega_files.file_name: file_name@download
         ega_files.file_size: file_size@download
         ega_files.file_md5sum: file_md5sum@download
@@ -105,7 +108,7 @@ workflow:
         xml_file_md5sum: xml_file_md5sum@prepare_metadata_xml
       depends_on:
       - completed@prepare_metadata_xml
-      - completed@md5sum_check
+      - completed@md5sum_check_download
 
 
 # A workflow is made up with one or more tasks
@@ -125,6 +128,9 @@ tasks:
       metadata_path:
         type: string
     output:
+      xml_file:
+        type: string
+        is_file: true
       xml_file_name:
         type: string
       xml_file_size:
@@ -135,42 +141,37 @@ tasks:
   download:
     command: download.py
     input:
-      files:  # we will later use parallel call to handle one file at a time
-        type: array
-        items:
-          type: object
-          properties:
-            ega_file_id:
-              type: string
-            file_name:
-              type: string
+      ega_file_id:
+        type: string
+      file_name:
+        type: string
+      object_id:
+        type: string
+      file_size:
+        type: string
+      file_md5sum:
+        type: string
     output:
-      files:
-        type: array
-        items:
-          type: object
-          properties:
-            ega_file_id:
-              type: string
-            file:
-              type: string
-              is_file: true
+      file:  # new field
+        type: string
+        is_file: true
+      ega_file_id:  # passing through
+        type: string
+      file_name:  # passing through
+        type: string
+      object_id:  # passing through
+        type: string
+      file_size:  # passing through
+        type: string
+      file_md5sum:  # passing through
+        type: string
 
   md5sum_check:
     command: md5sum_check.py
     input:
-      files:
-        type: array
-        items:
-          type: object
-          properties:
-            file:
-              type: string
-              is_file: true
-            file_size:
-              type: integer
-            file_md5sum:
-              type: string
+      file: file@download
+      file_size: ega_file.file_size
+      file_md5sum: ega_file.file_md5sum
 
   upload:
     command: upload.py
@@ -193,6 +194,8 @@ tasks:
               type: string
             object_id:
               type: string
+            ega_file_id:
+              type: string
       xml_file:
         type: string
         is_file: true
@@ -202,4 +205,3 @@ tasks:
         type: integer
       xml_file_md5sum:
         type: string
-
